@@ -1,6 +1,11 @@
 package com.example.android.project3_baking.Model;
 
-public class Recipe {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Recipe implements Parcelable{
 
     int id;
     String name;
@@ -69,4 +74,40 @@ public class Recipe {
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeArray(ingredients);
+        dest.writeArray(steps);
+        dest.writeInt(servings);
+        dest.writeString(image);
+    }
+
+    private Recipe(Parcel in){
+        id = in.readInt();
+        name = in.readString();
+        ingredients = in.createTypedArray(Ingredient.CREATOR);
+        steps = in.createTypedArray(Step.CREATOR);
+        servings = in.readInt();
+        image = in.readString();
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel source) {
+            return new Recipe(source);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 }
