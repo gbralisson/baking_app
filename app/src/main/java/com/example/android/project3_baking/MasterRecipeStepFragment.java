@@ -4,17 +4,22 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.android.project3_baking.Adapter.RecipeAdapter;
 import com.example.android.project3_baking.Adapter.StepAdapter;
 import com.example.android.project3_baking.Model.Ingredient;
 import com.example.android.project3_baking.Model.Step;
 
-public class MasterRecipeStepFragment extends Fragment implements StepAdapter.StepAdapterOnClickHandler{
+public class MasterRecipeStepFragment extends Fragment {
+
+    private StepAdapter.StepAdapterOnClickHandler stepAdapterOnClickHandler;
 
     private Step[] steps;
     private Ingredient[] ingredients;
@@ -23,12 +28,6 @@ public class MasterRecipeStepFragment extends Fragment implements StepAdapter.St
     private StepAdapter stepAdapter;
 
     public MasterRecipeStepFragment(){
-
-    }
-
-    @Override
-    public void onClick(Step step) {
-
     }
 
     @Override
@@ -42,7 +41,7 @@ public class MasterRecipeStepFragment extends Fragment implements StepAdapter.St
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        stepAdapter = new StepAdapter(getContext(), this);
+        stepAdapter = new StepAdapter(getContext(), stepAdapterOnClickHandler);
         stepAdapter.setSteps(steps);
 
         recyclerView.setAdapter(stepAdapter);
@@ -56,6 +55,10 @@ public class MasterRecipeStepFragment extends Fragment implements StepAdapter.St
 
     public void setIngredients(Ingredient[] ingredients){
         this.ingredients = ingredients;
+    }
+
+    public void setStepAdapterOnClickHandler(StepAdapter.StepAdapterOnClickHandler stepAdapterOnClickHandler){
+        this.stepAdapterOnClickHandler = stepAdapterOnClickHandler;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.android.project3_baking;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,21 +14,15 @@ import android.view.ViewGroup;
 import com.example.android.project3_baking.Adapter.RecipeAdapter;
 import com.example.android.project3_baking.Model.Recipe;
 
-public class MasterRecipeFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickHandler{
+public class MasterRecipeFragment extends Fragment{
+
+    private RecipeAdapter.RecipeAdapterOnClickHandler recipeAdapterOnClickHandler;
 
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
-
+    private RecyclerView.LayoutManager layoutManager;
 
     public MasterRecipeFragment(){
-    }
-
-    @Override
-    public void onClick(Recipe recipe) {
-        String KEY_INTENT = "recipe_key";
-        Intent intent = new Intent(getContext(), RecipeStepActivity.class);
-        intent.putExtra(KEY_INTENT, recipe);
-        startActivity(intent);
     }
 
     @Override
@@ -38,15 +33,23 @@ public class MasterRecipeFragment extends Fragment implements RecipeAdapter.Reci
 
         recyclerView = view.findViewById(R.id.rv_recipes);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
-        recipeAdapter = new RecipeAdapter(getContext(), this);
+        recipeAdapter = new RecipeAdapter(getContext(), recipeAdapterOnClickHandler);
 
         recyclerView.setAdapter(recipeAdapter);
 
         return view;
+    }
+
+    public void setLayoutManager(RecyclerView.LayoutManager layoutManager){
+        this.layoutManager = layoutManager;
+    }
+
+    public void setRecipeAdapterOnClickHandler(RecipeAdapter.RecipeAdapterOnClickHandler recipeAdapterOnClickHandler){
+        this.recipeAdapterOnClickHandler = recipeAdapterOnClickHandler;
     }
 
 }
