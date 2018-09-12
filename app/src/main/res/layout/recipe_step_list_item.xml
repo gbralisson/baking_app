@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -28,15 +29,6 @@
                 android:textSize="20sp"
                 android:padding="10dp"
                 android:layout_below="@id/txt_card_shortDescription_step"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_card_description_step"
-                android:text="Description"
-                android:textSize="15sp"
-                android:padding="10dp"
-                android:layout_below="@id/txt_card_thumbnail_step"/>
 
         </RelativeLayout>
 

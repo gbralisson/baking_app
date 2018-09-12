@@ -3,7 +3,9 @@ package com.example.android.project3_baking.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Step implements Parcelable{
+import java.io.Serializable;
+
+public class Step implements Serializable{
 
     int id;
     String shortDescription;
@@ -63,37 +65,37 @@ public class Step implements Parcelable{
         this.thumbnailURL = thumbnailURL;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(shortDescription);
-        dest.writeString(description);
-        dest.writeString(videoURL);
-        dest.writeString(thumbnailURL);
-    }
-
-    private Step(Parcel in){
-        id = in.readInt();
-        shortDescription = in.readString();
-        description = in.readString();
-        videoURL = in.readString();
-        thumbnailURL = in.readString();
-    }
-
-    public static final Creator<Step> CREATOR = new Creator<Step>() {
-        @Override
-        public Step createFromParcel(Parcel source) {
-            return new Step(source);
-        }
-
-        @Override
-        public Step[] newArray(int size) {
-            return new Step[size];
-        }
-    };
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeInt(id);
+//        dest.writeString(shortDescription);
+//        dest.writeString(description);
+//        dest.writeString(videoURL);
+//        dest.writeString(thumbnailURL);
+//    }
+//
+//    private Step(Parcel in){
+//        id = in.readInt();
+//        shortDescription = in.readString();
+//        description = in.readString();
+//        videoURL = in.readString();
+//        thumbnailURL = in.readString();
+//    }
+//
+//    public static final Creator<Step> CREATOR = new Creator<Step>() {
+//        @Override
+//        public Step createFromParcel(Parcel source) {
+//            return new Step(source);
+//        }
+//
+//        @Override
+//        public Step[] newArray(int size) {
+//            return new Step[size];
+//        }
+//    };
 }

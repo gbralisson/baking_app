@@ -17,10 +17,6 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     private Context context;
     private StepAdapterOnClickHandler stepAdapterOnClickHandler;
 
-    public StepAdapter(){
-
-    }
-
     public StepAdapter(Context context, StepAdapterOnClickHandler stepAdapterOnClickHandler){
         this.context = context;
         this.stepAdapterOnClickHandler = stepAdapterOnClickHandler;
@@ -42,7 +38,6 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     public void onBindViewHolder(StepAdapterViewHolder holder, int position) {
         holder.txt_card_shortDescription.setText(steps[position].getShortDescription());
         holder.txt_card_thumbnail.setText(steps[position].getThumbnailURL());
-        holder.txt_card_description.setText(steps[position].getDescription());
     }
 
     @Override
@@ -63,7 +58,6 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
             super(itemView);
             txt_card_shortDescription = itemView.findViewById(R.id.txt_card_shortDescription_step);
             txt_card_thumbnail = itemView.findViewById(R.id.txt_card_thumbnail_step);
-            txt_card_description = itemView.findViewById(R.id.txt_card_description_step);
             itemView.setOnClickListener(this);
         }
 

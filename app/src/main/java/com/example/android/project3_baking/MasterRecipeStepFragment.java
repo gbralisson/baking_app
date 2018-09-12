@@ -11,9 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.project3_baking.Adapter.StepAdapter;
+import com.example.android.project3_baking.Model.Ingredient;
 import com.example.android.project3_baking.Model.Step;
 
 public class MasterRecipeStepFragment extends Fragment implements StepAdapter.StepAdapterOnClickHandler{
+
+    private Step[] steps;
+    private Ingredient[] ingredients;
 
     private RecyclerView recyclerView;
     private StepAdapter stepAdapter;
@@ -30,7 +34,7 @@ public class MasterRecipeStepFragment extends Fragment implements StepAdapter.St
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_recipe_step, container);
+        final View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
 
         recyclerView = view.findViewById(R.id.rv_recipe_steps);
 
@@ -39,11 +43,19 @@ public class MasterRecipeStepFragment extends Fragment implements StepAdapter.St
         recyclerView.setLayoutManager(linearLayoutManager);
 
         stepAdapter = new StepAdapter(getContext(), this);
+        stepAdapter.setSteps(steps);
 
         recyclerView.setAdapter(stepAdapter);
 
         return view;
     }
 
+    public void setSteps(Step[] steps){
+        this.steps = steps;
+    }
+
+    public void setIngredients(Ingredient[] ingredients){
+        this.ingredients = ingredients;
+    }
 
 }

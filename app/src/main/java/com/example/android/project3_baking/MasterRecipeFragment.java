@@ -28,8 +28,6 @@ public class MasterRecipeFragment extends Fragment implements RecipeAdapter.Reci
         Intent intent = new Intent(getContext(), RecipeStepActivity.class);
         intent.putExtra(KEY_INTENT, recipe);
         startActivity(intent);
-
-//        Log.d("teste", recipe.getName());
     }
 
     @Override
