@@ -26,17 +26,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (findViewById(R.id.layout_recipe_tablet) != null){
+        if (findViewById(R.id.container_main_tablet) != null){
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
             masterRecipeFragment.setLayoutManager(gridLayoutManager);
+
+            fragmentManager.beginTransaction().add(R.id.container_main_tablet, masterRecipeFragment).commit();
 
         }else{
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             masterRecipeFragment.setLayoutManager(linearLayoutManager);
 
+            fragmentManager.beginTransaction().add(R.id.container_main, masterRecipeFragment).commit();
         }
-
-        fragmentManager.beginTransaction().add(R.id.container_main, masterRecipeFragment).commit();
 
     }
 

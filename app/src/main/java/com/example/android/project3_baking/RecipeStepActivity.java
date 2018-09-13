@@ -31,11 +31,6 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
                 masterRecipeStepFragment.setSteps(recipe.getSteps());
                 masterRecipeStepFragment.setIngredients(recipe.getIngredients());
 
-                if (findViewById(R.id.layout_recipe_tablet) != null)
-                    mtwoPane = true;
-                else
-                    mtwoPane = false;
-
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
 
@@ -47,14 +42,14 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
     @Override
     public void onClick(Step step) {
 
-        if (mtwoPane){
-            TextView textView = findViewById(R.id.txt_description);
-            textView.setText(step.getDescription());
-        }else {
-            MasterRecipeStepDetailFragment masterRecipeStepDetailFragment = new MasterRecipeStepDetailFragment();
-            masterRecipeStepDetailFragment.setStep(step);
+        MasterRecipeStepDetailFragment masterRecipeStepDetailFragment = new MasterRecipeStepDetailFragment();
+        masterRecipeStepDetailFragment.setStep(step);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (findViewById(R.id.layout_recipe_step_detail_tablet) != null){
+            fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetailFragment).commit();
+        }else {
             fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetailFragment).commit();
         }
     }

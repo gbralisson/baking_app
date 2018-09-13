@@ -33,8 +33,6 @@ public class MasterRecipeFragment extends Fragment{
 
         recyclerView = view.findViewById(R.id.rv_recipes);
 
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
         recyclerView.setLayoutManager(layoutManager);
 
         recipeAdapter = new RecipeAdapter(getContext(), recipeAdapterOnClickHandler);
