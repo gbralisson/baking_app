@@ -2,36 +2,53 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="120dp"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardview_recipe"
-        android:background="@color/colorPrimary">
+        style="@style/Base.CardView">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/skyBlue">
 
             <TextView
                 android:id="@+id/txt_card_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:text="Card"
+                android:padding="10dp"
+                android:text="@string/txt_card"
                 android:textSize="20sp"
                 android:gravity="center"/>
 
-            <TextView
-                android:id="@+id/txt_card_serving"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Servings"
-                android:textSize="16dp"
-                android:padding="10dp"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_serving"
+                    android:text="@string/txt_serving"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/txt_card_serving"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:padding="10dp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

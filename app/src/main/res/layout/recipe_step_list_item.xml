@@ -2,33 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        style="@style/Base.CardView">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/yellow">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_card_shortDescription_step"
-                android:text="ShortDescription"
+                android:text="@string/txt_shortDescription"
                 android:textSize="25sp"
                 android:padding="10dp"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_card_thumbnail_step"
-                android:text="Thumbnail"
-                android:textSize="20sp"
-                android:padding="10dp"
-                android:layout_below="@id/txt_card_shortDescription_step"/>
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/txt_card_thumbnail_step"-->
+                <!--android:text="@string/txt_thumbnail"-->
+                <!--android:textSize="20sp"-->
+                <!--android:padding="10dp"-->
+                <!--android:layout_below="@id/txt_card_shortDescription_step"/>-->
 
         </RelativeLayout>
 

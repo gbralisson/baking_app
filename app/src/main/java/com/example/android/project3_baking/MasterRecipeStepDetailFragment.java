@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.project3_baking.Model.Step;
+import com.example.android.project3_baking.Utils.Network;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -32,6 +33,8 @@ import com.google.android.exoplayer2.util.Util;
 public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlayer.EventListener{
 
     private TextView txtDescription;
+    private TextView txtNoInternet;
+    private TextView txtNoVideo;
     private Step step;
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer mExoPlayer;
@@ -48,10 +51,29 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
         final View view = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
 
         txtDescription = view.findViewById(R.id.txt_description);
+        txtNoInternet = view.findViewById(R.id.txt_warning_recipe_detail);
+        txtNoVideo = view.findViewById(R.id.txt_warning_recipe_detail_video);
+        simpleExoPlayerView = view.findViewById(R.id.player_recipe_step);
+
         txtDescription.setText(step.getDescription());
 
-        simpleExoPlayerView = view.findViewById(R.id.player_recipe_step);
-        initializePlayer(Uri.parse(step.getVideoURL()));
+        if (step.getVideoURL().isEmpty()){
+            txtNoVideo.setVisibility(View.VISIBLE);
+            simpleExoPlayerView.setVisibility(View.GONE);
+        } else {
+            txtNoVideo.setVisibility(View.GONE);
+            simpleExoPlayerView.setVisibility(View.VISIBLE);
+
+            if (Network.verifyConnection(getContext())) {
+                txtNoInternet.setVisibility(View.GONE);
+                simpleExoPlayerView.setVisibility(View.VISIBLE);
+
+                initializePlayer(Uri.parse(step.getVideoURL()));
+            } else {
+                txtNoInternet.setVisibility(View.VISIBLE);
+                simpleExoPlayerView.setVisibility(View.GONE);
+            }
+        }
 
         return view;
     }

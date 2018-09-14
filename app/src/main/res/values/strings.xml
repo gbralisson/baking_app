@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">project3_baking</string>
+
+    <string name="no_internet">No connection with internet</string>
+    <string name="no_video">No video available</string>
+    <string name="txt_serving">Servings:</string>
+    <string name="txt_card">Card</string>
+
+    <string name="txt_shortDescription">Short Descritpion</string>
+    <string name="txt_thumbnail">Thumbnail</string>
+    <string name="appwidget_text">Baking</string>
+    <string name="add_widget">Add widget</string>
 </resources>

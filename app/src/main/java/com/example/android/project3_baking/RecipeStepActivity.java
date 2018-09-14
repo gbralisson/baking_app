@@ -3,6 +3,7 @@ package com.example.android.project3_baking;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,16 +16,19 @@ import com.example.android.project3_baking.Model.Step;
 public class RecipeStepActivity extends AppCompatActivity implements StepAdapter.StepAdapterOnClickHandler{
 
     private Recipe recipe;
-    private boolean mtwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step);
 
+        ActionBar actionBar = this.getSupportActionBar();
+
         if (getIntent() != null){
             if (getIntent().hasExtra("recipe_key")){
                 recipe = (Recipe) getIntent().getSerializableExtra("recipe_key");
+
+                actionBar.setTitle(recipe.getName());
 
                 MasterRecipeStepFragment masterRecipeStepFragment = new MasterRecipeStepFragment();
                 masterRecipeStepFragment.setStepAdapterOnClickHandler(this);
@@ -50,6 +54,7 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         if (findViewById(R.id.layout_recipe_step_detail_tablet) != null){
             fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetailFragment).commit();
         }else {
+            fragmentManager.addOnBackStackChangedListener(null);
             fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetailFragment).commit();
         }
     }
