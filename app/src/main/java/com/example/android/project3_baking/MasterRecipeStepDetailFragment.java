@@ -5,11 +5,15 @@ import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.project3_baking.Adapter.IngredientAdapter;
+import com.example.android.project3_baking.Model.Ingredient;
 import com.example.android.project3_baking.Model.Step;
 import com.example.android.project3_baking.Utils.Network;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -35,7 +39,10 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
     private TextView txtDescription;
     private TextView txtNoInternet;
     private TextView txtNoVideo;
+    private RecyclerView rv_Ingredients;
+    private boolean statusClickIngredient = false;
     private Step step;
+    private Ingredient[] ingredients;
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer mExoPlayer;
     private PlaybackState.Builder mBuilder;
@@ -54,24 +61,46 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
         txtNoInternet = view.findViewById(R.id.txt_warning_recipe_detail);
         txtNoVideo = view.findViewById(R.id.txt_warning_recipe_detail_video);
         simpleExoPlayerView = view.findViewById(R.id.player_recipe_step);
+        rv_Ingredients = view.findViewById(R.id.rv_ingredients);
 
-        txtDescription.setText(step.getDescription());
+        if (statusClickIngredient){
 
-        if (step.getVideoURL().isEmpty()){
-            txtNoVideo.setVisibility(View.VISIBLE);
-            simpleExoPlayerView.setVisibility(View.GONE);
-        } else {
+            rv_Ingredients.setVisibility(View.VISIBLE);
+            txtDescription.setVisibility(View.GONE);
+            txtNoInternet.setVisibility(View.GONE);
             txtNoVideo.setVisibility(View.GONE);
-            simpleExoPlayerView.setVisibility(View.VISIBLE);
+            simpleExoPlayerView.setVisibility(View.GONE);
 
-            if (Network.verifyConnection(getContext())) {
-                txtNoInternet.setVisibility(View.GONE);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+            rv_Ingredients.setLayoutManager(linearLayoutManager);
+
+            IngredientAdapter ingredientAdapter = new IngredientAdapter(getContext());
+            ingredientAdapter.setIngredients(ingredients);
+
+            rv_Ingredients.setAdapter(ingredientAdapter);
+
+        } else {
+
+            rv_Ingredients.setVisibility(View.GONE);
+            txtDescription.setText(step.getDescription());
+
+            if (step.getVideoURL().isEmpty()) {
+                txtNoVideo.setVisibility(View.VISIBLE);
+                simpleExoPlayerView.setVisibility(View.GONE);
+            } else {
+                txtNoVideo.setVisibility(View.GONE);
                 simpleExoPlayerView.setVisibility(View.VISIBLE);
 
-                initializePlayer(Uri.parse(step.getVideoURL()));
-            } else {
-                txtNoInternet.setVisibility(View.VISIBLE);
-                simpleExoPlayerView.setVisibility(View.GONE);
+                if (Network.verifyConnection(getContext())) {
+                    txtNoInternet.setVisibility(View.GONE);
+                    simpleExoPlayerView.setVisibility(View.VISIBLE);
+
+                    initializePlayer(Uri.parse(step.getVideoURL()));
+                } else {
+                    txtNoInternet.setVisibility(View.VISIBLE);
+                    simpleExoPlayerView.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -81,6 +110,10 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
     public void setStep(Step step){
         this.step = step;
     }
+
+    public void setIngredient(Ingredient[] ingredients){ this.ingredients = ingredients; }
+
+    public void setStatusClickIngredient(boolean status){ this.statusClickIngredient = status; }
 
     public void initializePlayer(Uri media){
         if (mExoPlayer == null){

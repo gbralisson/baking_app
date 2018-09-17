@@ -3,12 +3,17 @@ package com.example.android.project3_baking;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 
 import com.example.android.project3_baking.Model.Ingredient;
+import com.example.android.project3_baking.Widget.WidgetContract;
 import com.example.android.project3_baking.Widget.WidgetService;
 
 /**
@@ -20,17 +25,22 @@ public class RecipeWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
         CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-//        views.setImageViewResource(R.id.widget_baking, R.drawable.baking_icon);
 
-        Intent widgetIntent = new Intent(context, WidgetService.class);
-        widgetIntent.setAction(WidgetService.SHOW_INGREDIENTS_LIST);
+//        views.setImageViewResource(R.id.widget_baking, R.drawable.baking_icon);
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        views.setOnClickPendingIntent(R.id.widget_baking, pendingIntent);
+        Intent widgetIntent = new Intent(context, WidgetService.class);
+//        widgetIntent.setAction(WidgetService.SHOW_INGREDIENTS_LIST);
+//        widgetIntent.setData(Uri.parse(widgetIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        // Construct the RemoteViews object
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+        views.setRemoteAdapter(R.id.list_ingredients_widget, widgetIntent);
+//        views.setOnClickPendingIntent(R.id.list_ingredients_widget, pendingIntent);
+//        views.setEmptyView(R.id.list_ingredients_widget,);
+
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

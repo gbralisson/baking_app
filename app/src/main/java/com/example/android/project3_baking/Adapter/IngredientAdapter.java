@@ -17,9 +17,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     private Context context;
     private IngredientAdapterClickHandler ingredientAdapterClickHandler;
 
-    public IngredientAdapter(Context context, IngredientAdapterClickHandler ingredientAdapterClickHandler){
+    public IngredientAdapter(Context context){
         this.context = context;
-        this.ingredientAdapterClickHandler = ingredientAdapterClickHandler;
+//        this.ingredientAdapterClickHandler = ingredientAdapterClickHandler;
     }
 
     public interface IngredientAdapterClickHandler{
@@ -39,7 +39,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     public void onBindViewHolder(@NonNull IngredientAdapterViewHolder holder, int position) {
         holder.txt_ingredient.setText(ingredients[position].getIngredient());
         holder.txt_measure.setText(ingredients[position].getMeasure());
-        holder.txt_quantity.setText(ingredients[position].getQuantity());
+        holder.txt_quantity.setText(String.valueOf(ingredients[position].getQuantity()));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         public void onClick(View v) {
             int id = getAdapterPosition();
             Ingredient ingredient = ingredients[id];
-            ingredientAdapterClickHandler.onClick(ingredient);
+            //ingredientAdapterClickHandler.onClick(ingredient);
         }
     }
 
