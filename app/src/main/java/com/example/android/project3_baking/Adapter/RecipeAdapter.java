@@ -5,12 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.project3_baking.Model.Recipe;
 import com.example.android.project3_baking.R;
 import com.example.android.project3_baking.Utils.Attributes;
 import com.example.android.project3_baking.Utils.ParseJson;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
@@ -47,6 +49,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
         holder.txtCardName.setText(recipes[position].getName());
         holder.txtCardServing.setText(String.valueOf(recipes[position].getServings()));
+
+        if (!recipes[position].getImage().isEmpty())
+            loadImageMovie(context, recipes[position].getImage(), holder.img_recipe);
     }
 
     @Override
@@ -63,11 +68,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
         private TextView txtCardName;
         private TextView txtCardServing;
+        private ImageView img_recipe;
 
         public RecipeAdapterViewHolder(View itemView) {
             super(itemView);
             txtCardName = itemView.findViewById(R.id.txt_card_name);
             txtCardServing = itemView.findViewById(R.id.txt_card_serving);
+            img_recipe = itemView.findViewById(R.id.img_recipe);
             itemView.setOnClickListener(this);
         }
 
@@ -82,6 +89,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     public void setRecipes(Recipe[] recipes){
         this.recipes = recipes;
         notifyDataSetChanged();
+    }
+
+    // Load the movie poster according the path
+    public static void loadImageMovie(Context context, String pathImage, ImageView imageView){
+        Picasso.with(context).load(pathImage).into(imageView);
     }
 
 }

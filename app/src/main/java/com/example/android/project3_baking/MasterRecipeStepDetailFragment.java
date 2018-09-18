@@ -4,6 +4,8 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +38,7 @@ import com.google.android.exoplayer2.util.Util;
 
 public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlayer.EventListener{
 
+    private TextView txtShortDescription;
     private TextView txtDescription;
     private TextView txtNoInternet;
     private TextView txtNoVideo;
@@ -48,6 +51,10 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
     private PlaybackState.Builder mBuilder;
     private static MediaSession mMediaSession;
 
+    public static final String CLICK = "click";
+    public static final String STEP = "step";
+    public static final String INGREDIENT = "ingredient";
+
     public MasterRecipeStepDetailFragment(){
 
     }
@@ -57,15 +64,23 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
 
         final View view = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
 
+        txtShortDescription = view.findViewById(R.id.txt_recipe_step);
         txtDescription = view.findViewById(R.id.txt_description);
         txtNoInternet = view.findViewById(R.id.txt_warning_recipe_detail);
         txtNoVideo = view.findViewById(R.id.txt_warning_recipe_detail_video);
         simpleExoPlayerView = view.findViewById(R.id.player_recipe_step);
         rv_Ingredients = view.findViewById(R.id.rv_ingredients);
 
+        if (savedInstanceState != null){
+            statusClickIngredient = savedInstanceState.getBoolean(CLICK);
+            step = (Step) savedInstanceState.getSerializable(STEP);
+            ingredients = (Ingredient[]) savedInstanceState.getSerializable(INGREDIENT);
+        }
+
         if (statusClickIngredient){
 
             rv_Ingredients.setVisibility(View.VISIBLE);
+            txtShortDescription.setVisibility(View.GONE);
             txtDescription.setVisibility(View.GONE);
             txtNoInternet.setVisibility(View.GONE);
             txtNoVideo.setVisibility(View.GONE);
@@ -83,6 +98,7 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
         } else {
 
             rv_Ingredients.setVisibility(View.GONE);
+            txtShortDescription.setText(step.getShortDescription());
             txtDescription.setText(step.getDescription());
 
             if (step.getVideoURL().isEmpty()) {
@@ -105,6 +121,14 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
         }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(CLICK, statusClickIngredient);
+        outState.putSerializable(STEP, step);
+        outState.putSerializable(INGREDIENT, ingredients);
     }
 
     public void setStep(Step step){

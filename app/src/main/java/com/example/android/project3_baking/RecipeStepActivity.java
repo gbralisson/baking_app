@@ -25,6 +25,11 @@ import com.example.android.project3_baking.Widget.WidgetContract;
 public class RecipeStepActivity extends AppCompatActivity implements StepAdapter.StepAdapterOnClickHandler{
 
     private Recipe recipe;
+    private static final String FRAGMENT_STATUS = "frag_status";
+    private static final String STATUS = "status";
+
+    private MasterRecipeStepDetailFragment masterRecipeStepDetailFragment;
+    private boolean statusRecipeDetailFragment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +44,17 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
 
                 actionBar.setTitle(recipe.getName());
 
-                MasterRecipeStepFragment masterRecipeStepFragment = new MasterRecipeStepFragment();
-                masterRecipeStepFragment.setStepAdapterOnClickHandler(this);
-                masterRecipeStepFragment.setSteps(recipe.getSteps());
-                masterRecipeStepFragment.setIngredients(recipe.getIngredients());
+                if (savedInstanceState != null) {
+                    if (savedInstanceState.getBoolean(STATUS)) {
+                        masterRecipeStepDetailFragment = (MasterRecipeStepDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT_STATUS);
+                        createRecipeStepDetailFragment(masterRecipeStepDetailFragment);
+                    } else {
+                        createRecipeStepFrament();
+                    }
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
-
+                } else {
+                    createRecipeStepFrament();
+                }
             }
         }
 
@@ -55,34 +63,22 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
     @Override
     public void onClick(Step step) {
 
-        MasterRecipeStepDetailFragment masterRecipeStepDetailFragment = new MasterRecipeStepDetailFragment();
+        statusRecipeDetailFragment = true;
+        masterRecipeStepDetailFragment = new MasterRecipeStepDetailFragment();
         masterRecipeStepDetailFragment.setStep(step);
         masterRecipeStepDetailFragment.setStatusClickIngredient(false);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        if (findViewById(R.id.layout_recipe_step_detail_tablet) != null){
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetailFragment).commit();
-        }else {
-            fragmentManager.addOnBackStackChangedListener(null);
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetailFragment).commit();
-        }
+        createRecipeStepDetailFragment(masterRecipeStepDetailFragment);
     }
 
     public void clickIngredients(View view){
 
-        MasterRecipeStepDetailFragment masterRecipeStepDetailFragment = new MasterRecipeStepDetailFragment();
+        statusRecipeDetailFragment = true;
+        masterRecipeStepDetailFragment = new MasterRecipeStepDetailFragment();
         masterRecipeStepDetailFragment.setIngredient(recipe.getIngredients());
         masterRecipeStepDetailFragment.setStatusClickIngredient(true);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        if (findViewById(R.id.layout_recipe_step_detail_tablet) != null){
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetailFragment).commit();
-        }else {
-            fragmentManager.addOnBackStackChangedListener(null);
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetailFragment).commit();
-        }
+        createRecipeStepDetailFragment(masterRecipeStepDetailFragment);
     }
 
     @Override
@@ -122,5 +118,36 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         Uri INGREDIENT = WidgetContract.IngredientEntry.CONTENT_URI;
         Cursor cursor = getContentResolver().query(INGREDIENT, null, null, null, null);
         return cursor;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (statusRecipeDetailFragment) {
+            getSupportFragmentManager().putFragment(outState, FRAGMENT_STATUS, masterRecipeStepDetailFragment);
+            outState.putBoolean(STATUS, statusRecipeDetailFragment);
+        }
+    }
+
+    public void createRecipeStepFrament(){
+        statusRecipeDetailFragment = false;
+        MasterRecipeStepFragment masterRecipeStepFragment = new MasterRecipeStepFragment();
+        masterRecipeStepFragment.setStepAdapterOnClickHandler(this);
+        masterRecipeStepFragment.setSteps(recipe.getSteps());
+        masterRecipeStepFragment.setIngredients(recipe.getIngredients());
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
+    }
+
+    public void createRecipeStepDetailFragment(MasterRecipeStepDetailFragment masterRecipeStepDetail){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (findViewById(R.id.layout_recipe_step_detail_tablet) != null){
+            fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetail).commit();
+        }else {
+            fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetail).commit();
+        }
     }
 }
