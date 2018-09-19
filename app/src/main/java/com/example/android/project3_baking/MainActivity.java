@@ -16,6 +16,8 @@ import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler{
 
+    private boolean isTablet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,12 +29,14 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (findViewById(R.id.container_main_tablet) != null){
+            isTablet = true;
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
             masterRecipeFragment.setLayoutManager(gridLayoutManager);
 
             fragmentManager.beginTransaction().add(R.id.container_main_tablet, masterRecipeFragment).commit();
 
         }else{
+            isTablet = false;
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             masterRecipeFragment.setLayoutManager(linearLayoutManager);
 
@@ -44,8 +48,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     @Override
     public void onClick(Recipe recipe) {
         String KEY_INTENT = "recipe_key";
+        String KEY_TABLET = "tablet_key";
         Intent intent = new Intent(this, RecipeStepActivity.class);
         intent.putExtra(KEY_INTENT, recipe);
+        intent.putExtra(KEY_TABLET, isTablet);
         startActivity(intent);
     }
 }

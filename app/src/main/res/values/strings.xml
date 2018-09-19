@@ -16,6 +16,7 @@
     <string name="txt_ingredient">Ingredient</string>
 
     <string name="show_data_widget">Show in Widget</string>
+    <string name="toast_info_widget">Ingredients inserted in widget</string>
 
     <string-array name="listview_test">
         <item>Mercury</item>

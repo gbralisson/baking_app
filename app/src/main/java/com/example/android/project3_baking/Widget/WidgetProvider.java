@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
+
 import com.example.android.project3_baking.Widget.WidgetContract.IngredientEntry;
 
 public class WidgetProvider extends ContentProvider{
@@ -102,6 +104,25 @@ public class WidgetProvider extends ContentProvider{
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+
+        final SQLiteDatabase db = widgetDbHelper.getWritableDatabase();
+        int match = uriMatcher.match(uri);
+        int ingredientUpdated;
+
+        switch (match) {
+            case INGREDIENT_ID:
+                //update a single task by getting the id
+                String id = uri.getPathSegments().get(1);
+                ingredientUpdated = db.update(IngredientEntry.TABLE_NAME, values, "_id=?", new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (ingredientUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return ingredientUpdated;
     }
 }

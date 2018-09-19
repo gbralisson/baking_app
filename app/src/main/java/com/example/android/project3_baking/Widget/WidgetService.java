@@ -17,8 +17,6 @@ import com.example.android.project3_baking.R;
 
 public class WidgetService extends RemoteViewsService {
 
-    private ListView listView;
-
     public final static String SHOW_INGREDIENTS_LIST = "com.example.android.project3_baking.ingredients_list";
 
     public Cursor getIngredientsList(){
@@ -36,8 +34,6 @@ public class WidgetService extends RemoteViewsService {
 
         private Context context;
         private Cursor cursor;
-        private String[] exampleData = {"one", "two", "three", "four",
-                "five", "six", "seven", "eight", "nine", "ten"};
 
         public ListWidgetItem(Context context, Cursor cursor){
             this.context = context;
@@ -72,7 +68,6 @@ public class WidgetService extends RemoteViewsService {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.row_listview_widget);
 
             if (cursor != null && getCount() > 0) {
-                Log.d("teste", String.valueOf(getCount()));
                 int indexIngredient = cursor.getColumnIndex(WidgetContract.IngredientEntry.INGREDIENT_NAME);
                 cursor.moveToPosition(position);
 

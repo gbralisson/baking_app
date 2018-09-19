@@ -24,7 +24,12 @@ import com.example.android.project3_baking.Widget.WidgetContract;
 
 public class RecipeStepActivity extends AppCompatActivity implements StepAdapter.StepAdapterOnClickHandler{
 
+    private static final String KEY_TABLET = "tablet_key";
+    private static final String KEY_INTENT = "recipe_key";
+
     private Recipe recipe;
+    private boolean isTablet;
+
     private static final String FRAGMENT_STATUS = "frag_status";
     private static final String STATUS = "status";
 
@@ -39,8 +44,9 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         ActionBar actionBar = this.getSupportActionBar();
 
         if (getIntent() != null){
-            if (getIntent().hasExtra("recipe_key")){
-                recipe = (Recipe) getIntent().getSerializableExtra("recipe_key");
+            if (getIntent().hasExtra(KEY_INTENT) && getIntent().hasExtra(KEY_TABLET)){
+                recipe = (Recipe) getIntent().getSerializableExtra(KEY_INTENT);
+                isTablet = getIntent().getBooleanExtra(KEY_TABLET, false);
 
                 actionBar.setTitle(recipe.getName());
 
@@ -100,18 +106,23 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
 
     public void setIngredientsDatabase(Ingredient[] ingredients){
 
-        for (Ingredient ingredient : ingredients) {
+        for (int i=0; i<ingredients.length; i++) {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_NAME, ingredient.getIngredient());
-            contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_MEASURE, ingredient.getMeasure());
-            contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_QUANTITY, ingredient.getQuantity());
+            contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_NAME, ingredients[i].getIngredient());
+            contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_MEASURE, ingredients[i].getMeasure());
+            contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_QUANTITY, ingredients[i].getQuantity());
 
-            if (getIngredientsList() != null)
-                getContentResolver().update(WidgetContract.IngredientEntry.CONTENT_URI, contentValues, null, null);
-            else
+            String id = "" + i;
+
+            if (getIngredientsList() != null) {
+                Uri uri = WidgetContract.IngredientEntry.CONTENT_URI;
+                getContentResolver().update(uri.buildUpon().appendPath(id).build(), contentValues, WidgetContract.IngredientEntry.INGREDIENT_NAME + " = " + ingredients[i].getIngredient(), null);
+            }else
                 getContentResolver().insert(WidgetContract.IngredientEntry.CONTENT_URI, contentValues);
 
         }
+
+        Toast.makeText(this, getString(R.string.toast_info_widget), Toast.LENGTH_SHORT).show();
     }
 
     public Cursor getIngredientsList(){
@@ -144,7 +155,7 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
     public void createRecipeStepDetailFragment(MasterRecipeStepDetailFragment masterRecipeStepDetail){
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (findViewById(R.id.layout_recipe_step_detail_tablet) != null){
+        if (isTablet){
             fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetail).commit();
         }else {
             fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetail).commit();
