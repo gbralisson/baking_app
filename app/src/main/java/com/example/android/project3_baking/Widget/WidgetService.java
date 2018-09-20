@@ -42,7 +42,7 @@ public class WidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-            SystemClock.sleep(500);
+
         }
 
         @Override

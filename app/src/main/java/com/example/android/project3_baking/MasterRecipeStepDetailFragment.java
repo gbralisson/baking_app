@@ -1,5 +1,6 @@
 package com.example.android.project3_baking;
 
+import android.content.res.Configuration;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.project3_baking.Adapter.IngredientAdapter;
@@ -112,12 +114,40 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
                     txtNoInternet.setVisibility(View.GONE);
                     simpleExoPlayerView.setVisibility(View.VISIBLE);
 
+                    if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                        rv_Ingredients.setVisibility(View.GONE);
+                        txtShortDescription.setVisibility(View.GONE);
+                        txtDescription.setVisibility(View.GONE);
+                        txtNoInternet.setVisibility(View.GONE);
+                        txtNoVideo.setVisibility(View.GONE);
+
+//                      getActivity().getActionBar().hide();
+
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
+                        layoutParams.width = layoutParams.MATCH_PARENT;
+                        layoutParams.height = layoutParams.MATCH_PARENT;
+                        simpleExoPlayerView.setLayoutParams(layoutParams);
+
+                    } else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+
+                        rv_Ingredients.setVisibility(View.GONE);
+                        txtShortDescription.setText(step.getShortDescription());
+                        txtDescription.setText(step.getDescription());
+
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
+                        layoutParams.width = layoutParams.MATCH_PARENT;
+                        layoutParams.height = 300;
+                        simpleExoPlayerView.setLayoutParams(layoutParams);
+
+                    }
+
                     initializePlayer(Uri.parse(step.getVideoURL()));
                 } else {
                     txtNoInternet.setVisibility(View.VISIBLE);
                     simpleExoPlayerView.setVisibility(View.GONE);
                 }
             }
+
         }
 
         return view;

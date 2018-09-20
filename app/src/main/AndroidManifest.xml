@@ -22,16 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecipeStepActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+            android:name=".RecipeStepActivity" >
         </activity>
 
         <receiver android:name=".RecipeWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ADDED" />
             </intent-filter>
 
             <meta-data
@@ -40,7 +37,7 @@
         </receiver>
         
         <service android:name=".Widget.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <provider
             android:authorities="com.example.android.project3_baking"

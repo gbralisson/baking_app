@@ -99,7 +99,19 @@ public class WidgetProvider extends ContentProvider{
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = widgetDbHelper.getWritableDatabase();
+        int match = uriMatcher.match(uri);
+        int id = 0;
+
+        switch (match){
+            case INGREDIENT:
+                id = db.delete(IngredientEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+
+                default:
+                    throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        return id;
     }
 
     @Override

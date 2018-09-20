@@ -34,6 +34,7 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
     private static final String STATUS = "status";
 
     private MasterRecipeStepDetailFragment masterRecipeStepDetailFragment;
+    MasterRecipeStepFragment masterRecipeStepFragment = new MasterRecipeStepFragment();
     private boolean statusRecipeDetailFragment = true;
 
     @Override
@@ -42,6 +43,7 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         setContentView(R.layout.activity_recipe_step);
 
         ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         if (getIntent() != null){
             if (getIntent().hasExtra(KEY_INTENT) && getIntent().hasExtra(KEY_TABLET)){
@@ -55,11 +57,12 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
                         masterRecipeStepDetailFragment = (MasterRecipeStepDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT_STATUS);
                         createRecipeStepDetailFragment(masterRecipeStepDetailFragment);
                     } else {
-                        createRecipeStepFrament();
+                        masterRecipeStepFragment = (MasterRecipeStepFragment) getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT_STATUS);
+                        createRecipeStepFrament(masterRecipeStepFragment);
                     }
 
                 } else {
-                    createRecipeStepFrament();
+                    createRecipeStepFrament(masterRecipeStepFragment);
                 }
             }
         }
@@ -97,6 +100,11 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        if (id == android.R.id.home){
+            statusRecipeDetailFragment = false;
+            onBackPressed();
+        }
+
         if (id == R.id.menu_info) {
             setIngredientsDatabase(recipe.getIngredients());
         }
@@ -106,19 +114,15 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
 
     public void setIngredientsDatabase(Ingredient[] ingredients){
 
+        getContentResolver().delete(WidgetContract.IngredientEntry.CONTENT_URI, null, null);
+
         for (int i=0; i<ingredients.length; i++) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_NAME, ingredients[i].getIngredient());
             contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_MEASURE, ingredients[i].getMeasure());
             contentValues.put(WidgetContract.IngredientEntry.INGREDIENT_QUANTITY, ingredients[i].getQuantity());
 
-            String id = "" + i;
-
-            if (getIngredientsList() != null) {
-                Uri uri = WidgetContract.IngredientEntry.CONTENT_URI;
-                getContentResolver().update(uri.buildUpon().appendPath(id).build(), contentValues, WidgetContract.IngredientEntry.INGREDIENT_NAME + " = " + ingredients[i].getIngredient(), null);
-            }else
-                getContentResolver().insert(WidgetContract.IngredientEntry.CONTENT_URI, contentValues);
+            getContentResolver().insert(WidgetContract.IngredientEntry.CONTENT_URI, contentValues);
 
         }
 
@@ -137,28 +141,40 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
 
         if (statusRecipeDetailFragment) {
             getSupportFragmentManager().putFragment(outState, FRAGMENT_STATUS, masterRecipeStepDetailFragment);
-            outState.putBoolean(STATUS, statusRecipeDetailFragment);
+        } else {
+            getSupportFragmentManager().putFragment(outState, FRAGMENT_STATUS, masterRecipeStepFragment);
         }
+
+        outState.putBoolean(STATUS, statusRecipeDetailFragment);
     }
 
-    public void createRecipeStepFrament(){
+    public void createRecipeStepFrament(MasterRecipeStepFragment masterRecipeStepFragment){
         statusRecipeDetailFragment = false;
-        MasterRecipeStepFragment masterRecipeStepFragment = new MasterRecipeStepFragment();
         masterRecipeStepFragment.setStepAdapterOnClickHandler(this);
         masterRecipeStepFragment.setSteps(recipe.getSteps());
         masterRecipeStepFragment.setIngredients(recipe.getIngredients());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
+
+        if (masterRecipeStepFragment.isAdded()) {
+            fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepFragment).commit();
+        }else{
+            fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
+        }
     }
 
     public void createRecipeStepDetailFragment(MasterRecipeStepDetailFragment masterRecipeStepDetail){
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (isTablet){
+            createRecipeStepFrament(masterRecipeStepFragment);
             fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetail).commit();
         }else {
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetail).commit();
+            if (masterRecipeStepDetail.isAdded()) {
+                fragmentManager.beginTransaction().remove(masterRecipeStepDetail).commit();
+                fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepDetail).addToBackStack(null).commit();
+            } else
+                fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepDetail).addToBackStack(null).commit();
         }
     }
 }

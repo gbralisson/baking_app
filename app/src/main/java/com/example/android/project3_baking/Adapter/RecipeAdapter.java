@@ -12,6 +12,7 @@ import com.example.android.project3_baking.Model.Recipe;
 import com.example.android.project3_baking.R;
 import com.example.android.project3_baking.Utils.Attributes;
 import com.example.android.project3_baking.Utils.ParseJson;
+import com.example.android.project3_baking.Utils.ReadFile;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -27,7 +28,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         this.recipeAdapterOnClickHandler = recipeAdapterOnClickHandler;
 
         try {
-            recipes = ParseJson.getRecipeJson(Attributes.testeJson);
+            recipes = ParseJson.getRecipeJson(ReadFile.readFromFile("teste.json", context));
         } catch (JSONException e) {
             e.printStackTrace();
         }

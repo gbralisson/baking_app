@@ -8,7 +8,7 @@ import com.example.android.project3_baking.Widget.WidgetContract.IngredientEntry
 public class WidgetDbHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "ingredient.db";
-    private static final int DATABSE_VERSION = 1;
+    private static final int DATABSE_VERSION = 2;
 
     public WidgetDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABSE_VERSION);
