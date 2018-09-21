@@ -3,8 +3,28 @@ package com.example.android.project3_baking.Utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
 
 public class Network {
+
+    private static final String RECIPE_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+
+    /* The format we want our API to return */
+    private static final String format = "json";
+    /* The units we want our API to return */
+    private static final String units = "metric";
+
+    final static String QUERY_PARAM = "api_key";
+    final static String SORT_BY_PARAM = "sort_by";
+    final static String FORMAT_PARAM = "mode";
+    final static String UNITS_PARAM = "units";
 
     public static boolean verifyConnection(Context context){
 
@@ -19,6 +39,42 @@ public class Network {
         }
 
         return false;
+    }
+
+    public static URL buildUrl() {
+
+        Uri builtUri = Uri.parse(RECIPE_URL).buildUpon()
+                .appendQueryParameter(FORMAT_PARAM, format)
+                .appendQueryParameter(UNITS_PARAM, units)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            if (hasInput) {
+                return scanner.next();
+            } else {
+                return null;
+            }
+        } finally {
+            urlConnection.disconnect();
+        }
     }
 
 }

@@ -114,32 +114,33 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
                     txtNoInternet.setVisibility(View.GONE);
                     simpleExoPlayerView.setVisibility(View.VISIBLE);
 
-                    if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                        rv_Ingredients.setVisibility(View.GONE);
-                        txtShortDescription.setVisibility(View.GONE);
-                        txtDescription.setVisibility(View.GONE);
-                        txtNoInternet.setVisibility(View.GONE);
-                        txtNoVideo.setVisibility(View.GONE);
+//                    if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+//                        rv_Ingredients.setVisibility(View.GONE);
+//                        txtShortDescription.setVisibility(View.GONE);
+//                        txtDescription.setVisibility(View.GONE);
+//                        txtNoInternet.setVisibility(View.GONE);
+//                        txtNoVideo.setVisibility(View.GONE);
 
 //                      getActivity().getActionBar().hide();
 
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
-                        layoutParams.width = layoutParams.MATCH_PARENT;
-                        layoutParams.height = layoutParams.MATCH_PARENT;
-                        simpleExoPlayerView.setLayoutParams(layoutParams);
+//                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
+//                        layoutParams.width = layoutParams.MATCH_PARENT;
+//                        layoutParams.height = layoutParams.MATCH_PARENT;
+//                        simpleExoPlayerView.setLayoutParams(layoutParams);
 
-                    } else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-
-                        rv_Ingredients.setVisibility(View.GONE);
-                        txtShortDescription.setText(step.getShortDescription());
-                        txtDescription.setText(step.getDescription());
-
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
-                        layoutParams.width = layoutParams.MATCH_PARENT;
-                        layoutParams.height = 300;
-                        simpleExoPlayerView.setLayoutParams(layoutParams);
-
-                    }
+//                    }
+//                    else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+//
+//                        rv_Ingredients.setVisibility(View.GONE);
+//                        txtShortDescription.setText(step.getShortDescription());
+//                        txtDescription.setText(step.getDescription());
+//
+//                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
+//                        layoutParams.width = layoutParams.MATCH_PARENT;
+//                        layoutParams.height = 300;
+//                        simpleExoPlayerView.setLayoutParams(layoutParams);
+//
+//                    }
 
                     initializePlayer(Uri.parse(step.getVideoURL()));
                 } else {

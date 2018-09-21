@@ -18,6 +18,7 @@ public class MasterRecipeFragment extends Fragment{
 
     private RecipeAdapter.RecipeAdapterOnClickHandler recipeAdapterOnClickHandler;
 
+    private Recipe[] recipes;
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -36,6 +37,7 @@ public class MasterRecipeFragment extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
 
         recipeAdapter = new RecipeAdapter(getContext(), recipeAdapterOnClickHandler);
+        recipeAdapter.setRecipes(recipes);
 
         recyclerView.setAdapter(recipeAdapter);
 
@@ -48,6 +50,10 @@ public class MasterRecipeFragment extends Fragment{
 
     public void setRecipeAdapterOnClickHandler(RecipeAdapter.RecipeAdapterOnClickHandler recipeAdapterOnClickHandler){
         this.recipeAdapterOnClickHandler = recipeAdapterOnClickHandler;
+    }
+
+    public void setRecipesAdapter(Recipe[] recipesAdapter){
+        this.recipes = recipesAdapter;
     }
 
 }

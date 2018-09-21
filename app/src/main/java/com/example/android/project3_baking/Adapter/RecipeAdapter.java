@@ -27,11 +27,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         this.context = context;
         this.recipeAdapterOnClickHandler = recipeAdapterOnClickHandler;
 
-        try {
-            recipes = ParseJson.getRecipeJson(ReadFile.readFromFile("teste.json", context));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public interface RecipeAdapterOnClickHandler{
