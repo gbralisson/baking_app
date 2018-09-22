@@ -37,7 +37,6 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     @Override
     public void onBindViewHolder(StepAdapterViewHolder holder, int position) {
         holder.txt_card_shortDescription.setText(steps[position].getShortDescription());
-//        holder.txt_card_thumbnail.setText(steps[position].getThumbnailURL());
     }
 
     @Override
@@ -57,7 +56,6 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
         public StepAdapterViewHolder(View itemView) {
             super(itemView);
             txt_card_shortDescription = itemView.findViewById(R.id.txt_card_shortDescription_step);
-//            txt_card_thumbnail = itemView.findViewById(R.id.txt_card_thumbnail_step);
             itemView.setOnClickListener(this);
         }
 

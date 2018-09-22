@@ -144,7 +144,7 @@ public class MasterRecipeStepDetailFragment extends Fragment{
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector, loadControl);
             simpleExoPlayerView.setPlayer(mExoPlayer);
 
-            String userAgent = Util.getUserAgent(getActivity(), "baking");
+            String userAgent = Util.getUserAgent(getActivity(), getString(R.string.baking_app));
             MediaSource mediaSource = new ExtractorMediaSource(media, new DefaultDataSourceFactory(getContext(), userAgent),
                     new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);

@@ -16,9 +16,6 @@ import com.example.android.project3_baking.Model.Ingredient;
 import com.example.android.project3_baking.Widget.WidgetContract;
 import com.example.android.project3_baking.Widget.WidgetService;
 
-/**
- * Implementation of App Widget functionality.
- */
 public class RecipeWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -26,21 +23,14 @@ public class RecipeWidget extends AppWidgetProvider {
 
         CharSequence widgetText = context.getString(R.string.appwidget_text);
 
-//        views.setImageViewResource(R.id.widget_baking, R.drawable.baking_icon);
-
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         Intent widgetIntent = new Intent(context, WidgetService.class);
-//        widgetIntent.setAction(WidgetService.SHOW_INGREDIENTS_LIST);
-//        widgetIntent.setData(Uri.parse(widgetIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
         views.setRemoteAdapter(R.id.list_ingredients_widget, widgetIntent);
-//        views.setOnClickPendingIntent(R.id.list_ingredients_widget, pendingIntent);
-//        views.setEmptyView(R.id.list_ingredients_widget,);
-
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

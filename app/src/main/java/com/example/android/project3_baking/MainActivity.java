@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                 if (masterRecipeFragment.isAdded())
                     fragmentManager.beginTransaction().replace(R.id.container_main, masterRecipeFragment).commit();
                 else
-                    fragmentManager.beginTransaction().add(R.id.container_main, masterRecipeFragment).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().add(R.id.container_main, masterRecipeFragment).commit();
             }
 
         }

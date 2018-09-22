@@ -15,11 +15,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
     private Ingredient[] ingredients;
     private Context context;
-    private IngredientAdapterClickHandler ingredientAdapterClickHandler;
 
     public IngredientAdapter(Context context){
         this.context = context;
-//        this.ingredientAdapterClickHandler = ingredientAdapterClickHandler;
     }
 
     public interface IngredientAdapterClickHandler{
@@ -68,7 +66,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         public void onClick(View v) {
             int id = getAdapterPosition();
             Ingredient ingredient = ingredients[id];
-            //ingredientAdapterClickHandler.onClick(ingredient);
         }
     }
 
