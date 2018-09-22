@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.android.project3_baking.Adapter.RecipeAdapter;
 import com.example.android.project3_baking.Model.Recipe;
@@ -29,10 +32,16 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private MasterRecipeFragment masterRecipeFragment;
     private static final int LOADER_ID = 01;
 
+    private TextView txt_noInternet;
+    private ProgressBar pb_loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        txt_noInternet = findViewById(R.id.txt_noInternet_main);
+        pb_loading = findViewById(R.id.pb_loading);
 
         masterRecipeFragment = new MasterRecipeFragment();
         masterRecipeFragment.setRecipeAdapterOnClickHandler(this);
@@ -54,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     public void loadData(){
         if (Network.verifyConnection(this)){
+
+            txt_noInternet.setVisibility(View.GONE);
+            pb_loading.setVisibility(View.VISIBLE);
+
             LoaderManager loaderManager = getSupportLoaderManager();
             Loader<Recipe[]> movieLoader = loaderManager.getLoader(LOADER_ID);
 
@@ -61,6 +74,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                 loaderManager.initLoader(LOADER_ID, null, this);
             else
                 loaderManager.restartLoader(LOADER_ID, null, this);
+
+        } else {
+
+            txt_noInternet.setVisibility(View.VISIBLE);
+            pb_loading.setVisibility(View.GONE);
+
         }
     }
 
@@ -108,28 +127,35 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     @Override
     public void onLoadFinished(@NonNull Loader<Recipe[]> loader, Recipe[] data) {
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        masterRecipeFragment.setRecipesAdapter(data);
+        if (data != null) {
 
-        if (findViewById(R.id.container_main_tablet) != null){
-            isTablet = true;
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
-            masterRecipeFragment.setLayoutManager(gridLayoutManager);
+            txt_noInternet.setVisibility(View.GONE);
+            pb_loading.setVisibility(View.GONE);
 
-            if (masterRecipeFragment.isAdded())
-                fragmentManager.beginTransaction().replace(R.id.container_main_tablet, masterRecipeFragment).commit();
-            else
-                fragmentManager.beginTransaction().add(R.id.container_main_tablet, masterRecipeFragment).commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            masterRecipeFragment.setRecipesAdapter(data);
 
-        }else{
-            isTablet = false;
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-            masterRecipeFragment.setLayoutManager(linearLayoutManager);
+            if (findViewById(R.id.container_main_tablet) != null) {
+                isTablet = true;
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+                masterRecipeFragment.setLayoutManager(gridLayoutManager);
 
-            if (masterRecipeFragment.isAdded())
-                fragmentManager.beginTransaction().replace(R.id.container_main, masterRecipeFragment).commit();
-            else
-                fragmentManager.beginTransaction().add(R.id.container_main, masterRecipeFragment).commit();
+                if (masterRecipeFragment.isAdded())
+                    fragmentManager.beginTransaction().replace(R.id.container_main_tablet, masterRecipeFragment).commit();
+                else
+                    fragmentManager.beginTransaction().add(R.id.container_main_tablet, masterRecipeFragment).commit();
+
+            } else {
+                isTablet = false;
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                masterRecipeFragment.setLayoutManager(linearLayoutManager);
+
+                if (masterRecipeFragment.isAdded())
+                    fragmentManager.beginTransaction().replace(R.id.container_main, masterRecipeFragment).commit();
+                else
+                    fragmentManager.beginTransaction().add(R.id.container_main, masterRecipeFragment).addToBackStack(null).commit();
+            }
+
         }
     }
 

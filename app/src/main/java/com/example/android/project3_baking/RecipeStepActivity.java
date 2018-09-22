@@ -103,6 +103,7 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         if (id == android.R.id.home){
             statusRecipeDetailFragment = false;
             onBackPressed();
+            createRecipeStepFrament(masterRecipeStepFragment);
         }
 
         if (id == R.id.menu_info) {
@@ -129,12 +130,6 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         Toast.makeText(this, getString(R.string.toast_info_widget), Toast.LENGTH_SHORT).show();
     }
 
-    public Cursor getIngredientsList(){
-        Uri INGREDIENT = WidgetContract.IngredientEntry.CONTENT_URI;
-        Cursor cursor = getContentResolver().query(INGREDIENT, null, null, null, null);
-        return cursor;
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -154,27 +149,23 @@ public class RecipeStepActivity extends AppCompatActivity implements StepAdapter
         masterRecipeStepFragment.setSteps(recipe.getSteps());
         masterRecipeStepFragment.setIngredients(recipe.getIngredients());
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         if (masterRecipeStepFragment.isAdded()) {
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepFragment).commit();
         }else{
-            fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container_recipe_step, masterRecipeStepFragment).commit();
         }
     }
 
     public void createRecipeStepDetailFragment(MasterRecipeStepDetailFragment masterRecipeStepDetail){
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (isTablet){
             createRecipeStepFrament(masterRecipeStepFragment);
-            fragmentManager.beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetail).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_recipe_step_detail_tablet, masterRecipeStepDetail).commit();
         }else {
             if (masterRecipeStepDetail.isAdded()) {
-                fragmentManager.beginTransaction().remove(masterRecipeStepDetail).commit();
-                fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepDetail).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container_recipe_step, masterRecipeStepDetail).commit();
             } else
-                fragmentManager.beginTransaction().add(R.id.container_recipe_step, masterRecipeStepDetail).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.container_recipe_step, masterRecipeStepDetail).addToBackStack(null).commit();
         }
     }
 }

@@ -38,7 +38,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlayer.EventListener{
+public class MasterRecipeStepDetailFragment extends Fragment{
 
     private TextView txtShortDescription;
     private TextView txtDescription;
@@ -50,16 +50,10 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
     private Ingredient[] ingredients;
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer mExoPlayer;
-    private PlaybackState.Builder mBuilder;
-    private static MediaSession mMediaSession;
 
     public static final String CLICK = "click";
     public static final String STEP = "step";
     public static final String INGREDIENT = "ingredient";
-
-    public MasterRecipeStepDetailFragment(){
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,35 +108,8 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
                     txtNoInternet.setVisibility(View.GONE);
                     simpleExoPlayerView.setVisibility(View.VISIBLE);
 
-//                    if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-//                        rv_Ingredients.setVisibility(View.GONE);
-//                        txtShortDescription.setVisibility(View.GONE);
-//                        txtDescription.setVisibility(View.GONE);
-//                        txtNoInternet.setVisibility(View.GONE);
-//                        txtNoVideo.setVisibility(View.GONE);
-
-//                      getActivity().getActionBar().hide();
-
-//                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
-//                        layoutParams.width = layoutParams.MATCH_PARENT;
-//                        layoutParams.height = layoutParams.MATCH_PARENT;
-//                        simpleExoPlayerView.setLayoutParams(layoutParams);
-
-//                    }
-//                    else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-//
-//                        rv_Ingredients.setVisibility(View.GONE);
-//                        txtShortDescription.setText(step.getShortDescription());
-//                        txtDescription.setText(step.getDescription());
-//
-//                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
-//                        layoutParams.width = layoutParams.MATCH_PARENT;
-//                        layoutParams.height = 300;
-//                        simpleExoPlayerView.setLayoutParams(layoutParams);
-//
-//                    }
-
                     initializePlayer(Uri.parse(step.getVideoURL()));
+
                 } else {
                     txtNoInternet.setVisibility(View.VISIBLE);
                     simpleExoPlayerView.setVisibility(View.GONE);
@@ -185,38 +152,26 @@ public class MasterRecipeStepDetailFragment extends Fragment implements ExoPlaye
         }
     }
 
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
+    private void releasePlayer() {
+        mExoPlayer.stop();
+        mExoPlayer.release();
     }
 
     @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+    public void onDestroy() {
+        super.onDestroy();
 
+        if (mExoPlayer != null)
+            releasePlayer();
     }
 
     @Override
-    public void onLoadingChanged(boolean isLoading) {
+    public void onPause() {
+        super.onPause();
 
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
-            mBuilder.setState(PlaybackState.STATE_PLAYING, mExoPlayer.getCurrentPosition(), 1f);
-        }else if((playbackState == ExoPlayer.STATE_READY)){
-            mBuilder.setState(PlaybackState.STATE_PAUSED, mExoPlayer.getCurrentPosition(), 1f);
+        if (mExoPlayer != null) {
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.getPlaybackState();
         }
-//        mMediaSession.setPlaybackState(mBuilder.build());
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-
     }
 }
