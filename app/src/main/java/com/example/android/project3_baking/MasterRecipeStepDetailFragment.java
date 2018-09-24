@@ -20,6 +20,7 @@ import com.example.android.project3_baking.Adapter.IngredientAdapter;
 import com.example.android.project3_baking.Model.Ingredient;
 import com.example.android.project3_baking.Model.Step;
 import com.example.android.project3_baking.Utils.Network;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -50,10 +51,12 @@ public class MasterRecipeStepDetailFragment extends Fragment{
     private Ingredient[] ingredients;
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer mExoPlayer;
+    public long position = C.TIME_UNSET;
 
     public static final String CLICK = "click";
     public static final String STEP = "step";
     public static final String INGREDIENT = "ingredient";
+    public static final String PLAYER = "player";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,6 +113,12 @@ public class MasterRecipeStepDetailFragment extends Fragment{
 
                     initializePlayer(Uri.parse(step.getVideoURL()));
 
+                    if (savedInstanceState != null) {
+                        position = savedInstanceState.getLong(PLAYER, position);
+                        mExoPlayer.seekTo(position);
+                        mExoPlayer.getPlayWhenReady();
+                    }
+
                 } else {
                     txtNoInternet.setVisibility(View.VISIBLE);
                     simpleExoPlayerView.setVisibility(View.GONE);
@@ -127,6 +136,9 @@ public class MasterRecipeStepDetailFragment extends Fragment{
         outState.putBoolean(CLICK, statusClickIngredient);
         outState.putSerializable(STEP, step);
         outState.putSerializable(INGREDIENT, ingredients);
+
+        if (!statusClickIngredient && (simpleExoPlayerView.getVisibility() == View.VISIBLE))
+            outState.putLong(PLAYER, mExoPlayer.getCurrentPosition());
     }
 
     public void setStep(Step step){
@@ -136,6 +148,8 @@ public class MasterRecipeStepDetailFragment extends Fragment{
     public void setIngredient(Ingredient[] ingredients){ this.ingredients = ingredients; }
 
     public void setStatusClickIngredient(boolean status){ this.statusClickIngredient = status; }
+
+
 
     public void initializePlayer(Uri media){
         if (mExoPlayer == null){
@@ -166,12 +180,32 @@ public class MasterRecipeStepDetailFragment extends Fragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mExoPlayer != null){
+            initializePlayer(Uri.parse(step.getVideoURL()));
+            mExoPlayer.seekTo(position);
+            mExoPlayer.getPlayWhenReady();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
         if (mExoPlayer != null) {
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.getPlaybackState();
+            position = mExoPlayer.getCurrentPosition();
+            releasePlayer();
         }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (mExoPlayer != null)
+            releasePlayer();
     }
 }

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +78,11 @@ public class Network {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    // Load the movie poster according the path
+    public static void loadImageMovie(Context context, String pathImage, ImageView imageView){
+        Picasso.with(context).load(pathImage).into(imageView);
     }
 
 }

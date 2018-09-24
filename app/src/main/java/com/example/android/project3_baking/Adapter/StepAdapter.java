@@ -1,15 +1,20 @@
 package com.example.android.project3_baking.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.project3_baking.Model.Step;
 import com.example.android.project3_baking.R;
+import com.example.android.project3_baking.Utils.Network;
+import com.example.android.project3_baking.Utils.ThumbnailRetriever;
+import com.squareup.picasso.Picasso;
 
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder>{
 
@@ -37,6 +42,10 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     @Override
     public void onBindViewHolder(StepAdapterViewHolder holder, int position) {
         holder.txt_card_shortDescription.setText(steps[position].getShortDescription());
+
+        if (!steps[position].getThumbnailURL().isEmpty())
+            getThumbnail(steps[position].getThumbnailURL(), holder.img_card_thumbnail);
+//            loadThumb(steps[position].getThumbnailURL(), holder.img_card_thumbnail);
     }
 
     @Override
@@ -50,12 +59,13 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     public class StepAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView txt_card_shortDescription;
-        private TextView txt_card_thumbnail;
+        private ImageView img_card_thumbnail;
         private TextView txt_card_description;
 
         public StepAdapterViewHolder(View itemView) {
             super(itemView);
             txt_card_shortDescription = itemView.findViewById(R.id.txt_card_shortDescription_step);
+            img_card_thumbnail = itemView.findViewById(R.id.img_thumbnail);
             itemView.setOnClickListener(this);
         }
 
@@ -70,6 +80,26 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     public void setSteps(Step[] steps){
         this.steps = steps;
         notifyDataSetChanged();
+    }
+
+    public void loadThumb(String path, ImageView imageView){
+        if (!path.isEmpty()){
+            Network.loadImageMovie(context, path, imageView);
+        }
+    }
+
+    public static void getThumbnail(String path, ImageView imageView){
+        try {
+            Bitmap bitmap = ThumbnailRetriever.getThumbnail(path);
+
+            if (bitmap != null){
+                bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
+                imageView.setImageBitmap(bitmap);
+            }
+
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
 

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.android.project3_baking.Model.Recipe;
 import com.example.android.project3_baking.R;
 import com.example.android.project3_baking.Utils.Attributes;
+import com.example.android.project3_baking.Utils.Network;
 import com.example.android.project3_baking.Utils.ParseJson;
 import com.example.android.project3_baking.Utils.ReadFile;
 import com.squareup.picasso.Picasso;
@@ -47,7 +48,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         holder.txtCardServing.setText(String.valueOf(recipes[position].getServings()));
 
         if (!recipes[position].getImage().isEmpty())
-            loadImageMovie(context, recipes[position].getImage(), holder.img_recipe);
+            Network.loadImageMovie(context, recipes[position].getImage(), holder.img_recipe);
     }
 
     @Override
@@ -88,8 +89,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     }
 
     // Load the movie poster according the path
-    public static void loadImageMovie(Context context, String pathImage, ImageView imageView){
-        Picasso.with(context).load(pathImage).into(imageView);
-    }
+//    public static void loadImageMovie(Context context, String pathImage, ImageView imageView){
+//        Picasso.with(context).load(pathImage).into(imageView);
+//    }
 
 }
