@@ -52,11 +52,13 @@ public class MasterRecipeStepDetailFragment extends Fragment{
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer mExoPlayer;
     public long position = C.TIME_UNSET;
+    public boolean state;
 
     public static final String CLICK = "click";
     public static final String STEP = "step";
     public static final String INGREDIENT = "ingredient";
     public static final String PLAYER = "player";
+    public static final String PLAYERSTATE = "playerState";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,7 +118,8 @@ public class MasterRecipeStepDetailFragment extends Fragment{
                     if (savedInstanceState != null) {
                         position = savedInstanceState.getLong(PLAYER, position);
                         mExoPlayer.seekTo(position);
-                        mExoPlayer.getPlayWhenReady();
+                        state = savedInstanceState.getBoolean(PLAYERSTATE);
+                        mExoPlayer.setPlayWhenReady(state);
                     }
 
                 } else {
@@ -137,8 +140,10 @@ public class MasterRecipeStepDetailFragment extends Fragment{
         outState.putSerializable(STEP, step);
         outState.putSerializable(INGREDIENT, ingredients);
 
-        if (!statusClickIngredient && (simpleExoPlayerView.getVisibility() == View.VISIBLE))
+        if (!statusClickIngredient && (simpleExoPlayerView.getVisibility() == View.VISIBLE)) {
             outState.putLong(PLAYER, mExoPlayer.getCurrentPosition());
+            outState.putBoolean(PLAYERSTATE, mExoPlayer.getPlayWhenReady());
+        }
     }
 
     public void setStep(Step step){
